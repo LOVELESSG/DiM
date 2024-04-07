@@ -17,6 +17,8 @@ import models.resnet as RN
 import models.convnet as CN
 import models.resnet_ap as RNAP
 import models.densenet_cifar as DN
+import models.alex_net as AN
+import models.vgg as V
 from gan_model import Generator, Discriminator
 from utils import AverageMeter, accuracy, Normalize, Logger, rand_bbox
 from augment import DiffAug
@@ -112,8 +114,8 @@ def define_model(args, num_classes, e_model=None):
     if e_model:
         model = e_model
     else:
-        model_pool = ['convnet', 'resnet10', 'resnet18',
-                      'resnet10_ap', 'resnet18_ap']
+        model_pool = ['convnet', 'resnet10', 'resnet18', 'alex_net', 'vgg11']
+                      #'resnet10_ap', 'resnet18_ap']
         model = random.choice(model_pool)
         print('Random model: {}'.format(model))
 
@@ -146,6 +148,10 @@ def define_model(args, num_classes, e_model=None):
         return RNAP.ResNetAP(args.data, 101, num_classes, nch=nch)
     elif model == 'densenet':
         return DN.densenet_cifar(num_classes)
+    elif model == 'alex_net':
+        return AN.AlexNet(num_classes, channel=nch)
+    elif model == 'vgg11':
+        return V.VGG11(channel=nch, num_classes=num_classes)
 
 
 def calc_gradient_penalty(args, discriminator, img_real, img_syn):

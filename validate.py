@@ -217,7 +217,7 @@ def validate(args, generator, testloader, criterion, aug_rand):
         best_top1 = 0.0
         best_top5 = 0.0
         for epoch_idx in range(args.epochs_eval):
-            for batch_idx in range(10 * args.ipc // args.batch_size):
+            for batch_idx in range(10 * args.ipc // args.batch_size + 1):
                 # obtain pseudo samples with the generator
                 if args.batch_size == args.num_classes:
                     lab_syn = torch.randperm(args.num_classes)
