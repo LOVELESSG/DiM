@@ -298,6 +298,12 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
     optim_model = torch.optim.SGD(model.parameters(), args.eval_lr, momentum=args.momentum,
                                   weight_decay=args.weight_decay)
 
+    #select second model
+    model1 = define_model(args, args.num_classes).cuda()
+    model1.train()
+    optim_model1 = torch.optim.SGD(model1.parameters(), args.eval_lr, momentum=args.momentum,
+                                   weight_decay=args.weight_decay)
+
     for batch_idx, (img_real, lab_real) in enumerate(trainloader):
         img_real = img_real.cuda()
         lab_real = lab_real.cuda()
