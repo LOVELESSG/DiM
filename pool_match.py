@@ -210,7 +210,7 @@ def add_loss(loss_sum, loss):
         return loss_sum + loss
 
 
-def matchloss(args, img_real, img_syn, lab_real, lab_syn, model):
+def matchloss(args, img_real, img_syn, lab_real, lab_syn, model, model1):
     """Matching losses (feature or gradient)
     """
     loss = None
@@ -245,7 +245,7 @@ def matchloss(args, img_real, img_syn, lab_real, lab_syn, model):
 
     elif 'logit' in args.match:
         output_real = F.log_softmax(model(img_real), dim=1)
-        output_syn = F.log_softmax(model(img_syn), dim=1)
+        output_syn = F.log_softmax(model1(img_syn), dim=1)
         loss = add_loss(loss, ((output_real - output_syn) ** 2).mean() * 0.01)
 
     return loss
@@ -331,9 +331,9 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
         # calculate the matching loss
         if args.match_aug:
             img_aug = aug(torch.cat([img_real, img_syn]))
-            match_loss = matchloss(args, img_aug[:args.batch_size], img_aug[args.batch_size:], lab_real, lab_real, model)# * args.match_coeff
+            match_loss = matchloss(args, img_aug[:args.batch_size], img_aug[args.batch_size:], lab_real, lab_real, model, model1)# * args.match_coeff
         else:
-            match_loss = matchloss(args, img_real, img_syn, lab_real, lab_real, model)# * args.match_coeff
+            match_loss = matchloss(args, img_real, img_syn, lab_real, lab_real, model, model1)# * args.match_coeff
         gen_loss = gen_loss + match_loss
 
         gen_loss.backward()
