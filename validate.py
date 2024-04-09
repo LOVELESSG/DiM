@@ -16,6 +16,8 @@ import models.resnet as RN
 import models.resnet_ap as RNAP
 import models.convnet as CN
 import models.densenet_cifar as DN
+import models.alex_net as AN
+import models.vgg as V
 from gan_model import Generator, Discriminator
 from utils import AverageMeter, accuracy, Normalize, Logger, rand_bbox
 from augment import DiffAug
@@ -141,6 +143,10 @@ def define_model(args, num_classes, e_model=None):
         return RNAP.ResNetAP(args.data, 101, num_classes, nch=nch)
     elif model == 'densenet':
         return DN.densenet_cifar(num_classes)
+    elif model == 'alex_net':
+        return AN.AlexNet(num_classes, channel=nch)
+    elif model == 'vgg11':
+        return V.VGG11(channel=nch, num_classes=num_classes)
 
 
 def remove_aug(augtype, remove_aug):
